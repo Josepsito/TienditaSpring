@@ -1,0 +1,2 @@
+com\deconfort\tiendita\entity\SaleCompletedEvent.class
+com\deconfort\tiendita\service\impl\SaleEventListener.class

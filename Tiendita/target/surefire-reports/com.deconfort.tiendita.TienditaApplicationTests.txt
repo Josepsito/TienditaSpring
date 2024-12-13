@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.deconfort.tiendita.TienditaApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.729 s -- in com.deconfort.tiendita.TienditaApplicationTests
