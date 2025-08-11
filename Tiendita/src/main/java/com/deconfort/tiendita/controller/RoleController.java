@@ -11,25 +11,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/tiendita")
 public class RoleController {
+
     @Autowired
     private RoleService roleService;
 
     @GetMapping("/role/{name}")
-    public ResponseEntity<Role> listarRolPorNombre(@PathVariable String name){
+    public ResponseEntity<Role> listarRolPorNombre(@PathVariable String name) {
         Role role = roleService.verRole(name);
-        return ResponseEntity.status(HttpStatus.OK).body(role);
+        return (role != null)
+                ? ResponseEntity.ok(role)
+                : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/role")
-    public ResponseEntity<List<Role>> listarRoles(){
+    public ResponseEntity<List<Role>> listarRoles() {
         List<Role> roleList = roleService.verTodosLosRoles();
-        return ResponseEntity.status(HttpStatus.OK).body(roleList);
+        return roleList.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(roleList);
     }
-
 }

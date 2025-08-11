@@ -2,6 +2,7 @@ package com.deconfort.tiendita.service;
 
 import com.deconfort.tiendita.entity.Product;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService{
@@ -9,17 +10,20 @@ public interface ProductService{
     Product verProducto(int id);
     List<Product> verTodosLosProductos();
 
-    List<Product> verProductosPorIniciales(String iniciales);
+
+    Product buscarProductoPorNombre(String nombre);
+
+    List<Product> buscarProductosPorIniciales(String iniciales) throws IOException;
 
     List<Product> verProductosPorCategoria(String categoria);
 
-    List<Product> añadirListaDeProductos(List<Product> products);
+    List<Product> añadirListaDeProductos(List<Product> products) throws IOException;
 
-    Product crearProducto(Product product);
+    Product crearProducto(Product product) throws IOException;
 
-    Product retirarProducto(int id, int cant);
+    Product retirarProducto(int id, int cant) throws IOException;
 
-    boolean eliminarProducto(int id);
+    boolean eliminarProducto(int id) throws IOException;
 
     boolean eliminarTodosLosProductos();
 }

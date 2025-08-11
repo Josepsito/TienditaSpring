@@ -22,7 +22,8 @@ public class StoreController {
     @GetMapping("/store")
     public ResponseEntity<Store> verTienda() {
         Store store = storeService.verDatosDeTienda();
-        return new ResponseEntity<>(store,HttpStatus.OK);
+        return (store != null)
+                ? ResponseEntity.ok(store)
+                : ResponseEntity.notFound().build();
     }
-
 }

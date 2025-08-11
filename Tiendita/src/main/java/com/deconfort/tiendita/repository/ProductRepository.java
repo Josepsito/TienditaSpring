@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findByCategory(String category);
+
+    Optional<Product> findByName(String nombre);
 }

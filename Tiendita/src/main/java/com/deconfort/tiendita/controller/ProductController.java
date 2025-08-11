@@ -8,68 +8,69 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
 @RestController
-@RequestMapping(value = "/api/v1/tiendita")
-public class ProductController{
+@RequestMapping(value = "/api/v1/tiendita/product")
+@CrossOrigin("*")
+public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products/{id}")
-    public ResponseEntity<Product> listarProductoPorId(@PathVariable int id){
+    @GetMapping("id/{id}")
+    public ResponseEntity<Product> obtenerProductoPorId(@PathVariable int id) {
         Product product = productService.verProducto(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(product);
+        return (product != null)
+                ? ResponseEntity.ok(product)
+                : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/products/name/{iniciales}")
-    public ResponseEntity<?> verProductosPorIniciales(@PathVariable String iniciales){
-        List<Product> products = productService.verProductosPorIniciales(iniciales);
-        if (products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos con estas iniciales");
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    @GetMapping("nombre/{nombre}")
+    public ResponseEntity<Product> obtenerProductoPorNombre(@PathVariable String nombre) {
+        Product product = productService.buscarProductoPorNombre(nombre);
+        return (product != null)
+                ? ResponseEntity.ok(product)
+                : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/products/category/{categoria}")
-    public ResponseEntity<List<Product>> verProductosPorCategoria(@PathVariable String categoria){
+    @GetMapping("buscar/{iniciales}")
+    public ResponseEntity<List<Product>> verProductosPorIniciales(@PathVariable String iniciales) throws IOException {
+        List<Product> products = productService.buscarProductosPorIniciales(iniciales);
+        return products.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(products);
+    }
+
+    @GetMapping("category/{categoria}")
+    public ResponseEntity<List<Product>> verProductosPorCategoria(@PathVariable String categoria) {
         List<Product> products = productService.verProductosPorCategoria(categoria);
-        if (products.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return products.isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(products);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> listarTodosLosProductos(){
-
+    @GetMapping("")
+    public ResponseEntity<List<Product>> listarTodosLosProductos() {
         List<Product> products = productService.verTodosLosProductos();
-
-        if (products.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return products.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(products);
     }
 
-    @PostMapping("/products")
-    public ResponseEntity<List<Product>> añadirListaDeProductos(@RequestBody List<Product> products){
-
-        if (products == null || products.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PostMapping("")
+    public ResponseEntity<List<Product>> añadirListaDeProductos(@RequestBody List<Product> products) throws IOException {
+        if (products == null || products.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
         List<Product> savedProducts = productService.añadirListaDeProductos(products);
-
-        return new ResponseEntity<>(savedProducts, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProducts);
     }
 
-
-    @DeleteMapping("/products")
+    @DeleteMapping("")
     public ResponseEntity<String> eliminarTodosLosProductos() {
         productService.eliminarTodosLosProductos();
         return ResponseEntity.ok("Todos los productos han sido eliminados.");
     }
-
 }
